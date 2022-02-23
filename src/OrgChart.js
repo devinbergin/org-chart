@@ -756,22 +756,6 @@ oj.visualization.OrgChart = (function() {
 
     })(orgchart.prototype);
 
-    (function init() {
-        var cssText = ".oj-orgchart.dragged{opacity:.4}.oj-orgchart td{font-size:15px;font-weight:bold;text-align:center;width:20px;-webkit-user-select:none;-moz-user-select:none;height:10px}.node{border:3px solid #1F497D;background:#0070C0;{borderRadius};color:white;height:60px!important}.top{border-top:2px solid #1F497D}.left{border-left:2px solid #1F497D}.collapsed{border-color:#76923C}.node.collapsed{background:#9BBB59}.selected{border-color:#E36C0A}.node.selected{background:#F79646}.hover,.clicked{border-color:#F79646}.node.hover{background:#FABF8F;cursor:pointer}.node.clicked{background:#F79646}.hidden{visibility:hidden;border-color:white}.dragged{border-color:#8064A2}.node.dragged{background:#B2A1C7;cursor:pointer}";
-        if (/firefox/i.test(navigator.userAgent)) {
-            //To overcome firefox bug
-            cssText += ".oj-orgchart{border-collapse:collapse}";
-            cssText = cssText.replace("{borderRadius}", "");
-        } else {
-            cssText = cssText.replace("{borderRadius}", "border-radius:5px");
-        }
-        var styleTag = createNode("style");
-        if (styleTag.innerText) {
-            styleTag.innerText = cssText;
-        } else {
-            styleTag.innerHTML = cssText;
-        }
-        document.getElementsByTagName("head")[0].appendChild(styleTag);
-    })();
+    
     return orgchart;
 })();

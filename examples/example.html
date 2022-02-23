@@ -1,9 +1,14 @@
 <html>
 	<head>
+
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 		<script type="text/javascript" src="../src/OrgChart.js"></script>
+
+		<link href="style.css" rel="stylesheet">
+
 		<script type="text/javascript">
 			var tree;
-			function init() {
+			function generateOrgChart() {
 				var treeContainer = document.getElementById("treeContainer");
 				tree = new oj.visualization.OrgChart({
 					"container" : treeContainer,
@@ -57,8 +62,13 @@
 			}
 		</script>
 	</head>
-	<body onload="init();">
-		<div id="treeContainer"/>
-		<button id="test" onclick="getData();">Get Data</button>
+	<body>
+		<div id="treeContainer"></div>
 	</body>
+
+	<script>
+		$(document).ready(function() {
+			generateOrgChart();
+		});
+	</script>
 </html>
