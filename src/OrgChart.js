@@ -74,12 +74,8 @@ oj.visualization.OrgChart = (function() {
         "node3": "node3",
         "childStub": "left",
         "chart": "oj-orgchart",
-        "node-select": "selected",
         "node-hover": "hover",
-        "visiblity": "hidden",
-        "collapse": "collapsed",
-        "clicked": "clicked",
-        "dragged": "dragged"
+        "visiblity": "hidden"
     };
 
     var createNode = function(nodeType, inputObj) {
@@ -122,7 +118,7 @@ oj.visualization.OrgChart = (function() {
         this.nodePosition = inputObj["nodePosition"];
         this.setParentNode(inputObj["parentNode"]);
         this.constructor = arguments.callee;
-        //node-click, node-dbclick, node-hover
+        // node-hover
         this.events = {};
         this.orgChart = inputObj["orgChart"];
         this.nodeIndex = inputObj["nodeIndex"];
@@ -131,7 +127,7 @@ oj.visualization.OrgChart = (function() {
         this.isClicked = false;
     };
 
-    Node.prototype = new oj.utilities.Events(["node-click", "node-dbclick", "node-hover"]);
+    Node.prototype = new oj.utilities.Events(["node-hover"]);
 
     (function(prototypeObject) {
         var setParentNode = function(parentNodeObj) {
@@ -275,63 +271,13 @@ oj.visualization.OrgChart = (function() {
                     var element = this.htmlContent[i][j] = createNode("td", properties);
                     if (i == 1 && j == 1) {
                         element.innerHTML = this.name;
-                        element.onclick = oj.utilities.Events.bindHandler(nodeClickHandler, this);
-                        element.ondblclick = oj.utilities.Events.bindHandler(nodeDblClickHandler, this);
                         element.onmouseover = oj.utilities.Events.bindHandler(mouseOverHandler, this);
                         element.onmouseout = oj.utilities.Events.bindHandler(mouseOutHandler, this);
-                        this.orgChart["options"]["selectable"] && (element.onmousedown = oj.utilities.Events.bindHandler(mouseDownHandler, this));
-                        this.orgChart["options"]["editable"] && setDragEvents(element, this);
                         element.nodeObject = this;
                     }
                 }
             }
             return this.htmlContent;
-        };
-
-        var setDragEvents = function(elmt, nodeObject) {
-            elmt.addEventListener('dragstart', oj.utilities.Events.bindHandler(handleDragStart, nodeObject), false);
-            elmt.addEventListener('mouseup', oj.utilities.Events.bindHandler(handleNodeMouseUp, nodeObject), false);
-        };
-
-        var handleDragStart = function(eventObject) {
-            eventObject.preventDefault && eventObject.preventDefault();
-            return false;
-        };
-
-        var handleNodeMouseUp = function(eventObject) {
-            var nodeToAdd = this.orgChart["currentClickedNode"];
-            if (isValidAddition(nodeToAdd, this)) {
-                nodeToAdd.userData["1"] = this.name;
-                this.orgChart.setData(this.orgChart.userData);
-                this.orgChart.draw();
-            }
-        };
-
-        var isValidAddition = function(nodeToAdd, targetNode) {
-            if (!nodeToAdd || nodeToAdd == targetNode || targetNode == nodeToAdd.parentNode) {
-                return false;
-            }
-            var childNodes = nodeToAdd.orgChart["childNodeCache"][nodeToAdd.toString()];
-            for (var i = 0; i < childNodes.length; i++) {
-                if (targetNode == childNodes[i]) {
-                    return false;
-                }
-            }
-            return true;
-        };
-
-        var nodeClickHandler = function(eventObject) {
-            var isSelectable = this.orgChart["options"]["selectable"];
-            if (isSelectable) {
-                this.setSelectedNode();
-                eventObject.cancelBubble = true;
-                eventObject.stopPropagation && eventObject.stopPropagation();
-            }
-            triggerUserEvent("node-click", eventObject, this);
-        };
-
-        var nodeDblClickHandler = function(eventObject) {
-            triggerUserEvent("node-dbclick", eventObject, this);
         };
 
         var mouseOverHandler = function(eventObject) {
@@ -340,33 +286,7 @@ oj.visualization.OrgChart = (function() {
         };
 
         var mouseOutHandler = function(eventObject) {
-            this.orgChart["options"]["showHoverColors"] && !this.isNodeClicked() && this.applyNodeStyle(false, classes["node-hover"]);
-        };
-
-        var mouseDownHandler = function(eventObject) {
-            this.applyNodeStyle(true, classes["clicked"]);
-            this.orgChart["currentClickedNode"] = this;
-            this.isClicked = true;
-        };
-
-        var triggerUserEvent = function(eventType, eventObject, nodeObject) {
-            eventObject = eventObject || window.event;
-            nodeObject.triggerEvent(eventType, {
-                "htmlEventObject": eventObject,
-                "nodeObject": nodeObject
-            });
-        };
-
-        var setSelectedNode = function(clearSelection) {
-            var chartObj = this.orgChart;
-            var currentSelected = chartObj["currentSelectedNode"];
-            if (currentSelected) {
-                currentSelected.applyNodeStyle(false, classes["node-select"]);
-            }
-            if (!clearSelection) {
-                this.applyNodeStyle(true, classes["node-select"]);
-                chartObj["currentSelectedNode"] = this;
-            }
+            this.orgChart["options"]["showHoverColors"] && this.applyNodeStyle(false, classes["node-hover"]);
         };
 
         var applyNodeStyle = function(setStyle, className) {
@@ -427,14 +347,12 @@ oj.visualization.OrgChart = (function() {
             }
         };
 
-        var unclickNode = function() {
-            this.isClicked = false;
-            this.applyNodeStyle(false, classes["clicked"]);
-            this.applyNodeStyle(false, classes["node-hover"]);
-        };
-
-        var isNodeClicked = function() {
-            return this.isClicked || this.htmlContent[1][1].classList.contains(classes["clicked"]);
+        var triggerUserEvent = function(eventType, eventObject, nodeObject) {
+            eventObject = eventObject || window.event;
+            nodeObject.triggerEvent(eventType, {
+                "htmlEventObject": eventObject,
+                "nodeObject": nodeObject
+            });
         };
 
         var getPosition = function() {
@@ -450,12 +368,9 @@ oj.visualization.OrgChart = (function() {
         prototypeObject["getHTMLContent"] = getHTMLContent;
         prototypeObject["getNodeWidth"] = getNodeWidth;
         prototypeObject["setDimensions"] = setDimensions;
-        prototypeObject["setSelectedNode"] = setSelectedNode;
         prototypeObject["toString"] = toString;
         prototypeObject["collapse"] = collapse;
         prototypeObject["applyNodeStyle"] = applyNodeStyle;
-        prototypeObject["unclickNode"] = unclickNode;
-        prototypeObject["isNodeClicked"] = isNodeClicked;
         prototypeObject["getPosition"] = getPosition;
 
     })(Node.prototype);
@@ -466,55 +381,19 @@ oj.visualization.OrgChart = (function() {
         if (inputObj) {
             if (inputObj["options"]) {
                 this.options["highlightSubtree"] = inputObj["options"]["highlightSubtree"] || false;
-                this.options["allowCollapse"] = inputObj["options"]["allowCollapse"] || false;
-                this.options["selectable"] = inputObj["options"]["selectable"] || false;
+                this.options["allowCollapse"] = false;
+                this.options["selectable"] = false;
                 this.options["showHoverColors"] = inputObj["options"]["showHoverColors"] || false;
-                this.options["editable"] = inputObj["options"]["editable"] || false;
+                this.options["editable"] = false;
             }
             this.container = inputObj["container"];
-            if (this.container) {
-                this["options"]["selectable"] && (this.container.onmouseup = oj.utilities.Events.bindHandler(mouseUpHandler, this));
-                this["options"]["editable"] && (this.container.onmousemove = oj.utilities.Events.bindHandler(mouseMoveHandler, this));
-            }
         }
         this.currentLeafNodeIndex = 0;
         this.tableRows = [];
         this.table = createTable(this);
-        this.currentSelectedNode = undefined;
-        this.currentClickedNode = undefined;
         this.childNodeCache = {}; //Cache of all child nodes in all levels under a node
         //node-select, node-dbclick, node-collapse, node-hover
         this.events = {};
-    };
-
-    var mouseMoveHandler = function(eventObject) {
-        var subTree = this["currentDragged"];
-        if (this.currentClickedNode && this.currentClickedNode != this.rootNode && !subTree) {
-            subTree = this["currentDragged"] = this.getSubTree(this.currentClickedNode, {
-                "options": {
-                    "highlightSubtree": true
-                }
-            });
-            subTree.rootNode.applyNodeStyle(true, classes["dragged"]);
-            subTree.table.classList.add(classes["dragged"]);
-            var tableWidth = (getComputedCellWidth(this) * subTree.rootNode.leafNodeCount * 8) + "px";
-            subTree.table.style.width = tableWidth;
-            subTree.table.style.position = "absolute";
-            this.container.appendChild(subTree.table);
-        }
-        if (subTree) {
-            var mousePos = getMousePosition(eventObject, subTree, this.container);
-            subTree.setPosition(mousePos.x, mousePos.y);
-        }
-    };
-
-    var getMousePosition = function(e, subTree, container) {
-        var xOffset = 5;
-        var yOffset = 5;
-        return {
-            "x": getSubtreePosition(e.clientX, container.offsetWidth, subTree.table.offsetWidth, xOffset),
-            "y": getSubtreePosition(e.clientY, container.offsetHeight, subTree.table.offsetHeight, yOffset)
-        };
     };
 
     var getSubtreePosition = function(client, container, subtree, offset) {
@@ -523,38 +402,17 @@ oj.visualization.OrgChart = (function() {
         return total > container ? (client - offset - subtree) : (client + offset);
     };
 
-    var mouseUpHandler = function(eventObject) {
-        this["options"]["editable"] && dragEndHandler(this);
-        this.currentClickedNode && this.currentClickedNode.unclickNode();
-        this.currentClickedNode = undefined;
-    };
-
-    var dragEndHandler = function(chartObj) {
-        var subTree = chartObj["currentDragged"];
-        if (subTree) {
-            chartObj["container"].removeChild(subTree.table);
-            delete chartObj["currentDragged"];
-        }
-    };
-
     var createTable = function(chartObj) {
         var table = createNode("table", {
             "className": classes["chart"],
             "attributes": {
                 "cellspacing": "0"
-            },
-            "eventHandlers": {
-                "click": oj.utilities.Events.bindHandler(tableClickHandler, chartObj)
             }
         });
         var tbody = createNode("tbody", {
             "parent": table
         });
         return table;
-    };
-
-    var tableClickHandler = function(eventObject) {
-        this.currentSelectedNode && this.currentSelectedNode.setSelectedNode(true);
     };
 
     var arrangeData = function(chartObj) {
@@ -647,22 +505,7 @@ oj.visualization.OrgChart = (function() {
      * Internal Event handlers
      */
     var setNodeEvents = function(node, chartObj) {
-        node.setEventListener("node-click", oj.utilities.Events.bindHandler(nodeSelectHandler, chartObj));
-        node.setEventListener("node-dbclick", oj.utilities.Events.bindHandler(nodeDblClickHandler, chartObj));
         node.setEventListener("node-hover", oj.utilities.Events.bindHandler(nodeHoverHandler, chartObj));
-    };
-
-    var nodeSelectHandler = function(eventObject) {
-        this.triggerEvent("node-select", eventObject);
-    };
-
-    var nodeDblClickHandler = function(eventObject) {
-        if (this.options["allowCollapse"]) {
-            var isCollapsed = eventObject["nodeObject"].collapse();
-            eventObject["isCollapsed"] = isCollapsed;
-            isCollapsed && this.triggerEvent("node-collapse", eventObject);
-        }
-        this.triggerEvent("node-dbclick", eventObject);
     };
 
     var nodeHoverHandler = function(eventObject) {
@@ -673,7 +516,7 @@ oj.visualization.OrgChart = (function() {
         return orgChart.table.rows[0].cells[0].offsetWidth;
     };
 
-    orgchart.prototype = new oj.utilities.Events(["node-select", "node-collapse", "node-dbclick", "node-hover"]);
+    orgchart.prototype = new oj.utilities.Events(["node-hover"]);
 
     (function(prototypeObject) {
         var setData = function(data) {
