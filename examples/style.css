@@ -1,3 +1,8 @@
+body {
+    background-color:#f2f5f7;
+    font-family: 'Rubik', sans-serif;
+}
+
 .oj-orgchart.dragged {
     opacity:.4
 }
@@ -13,76 +18,46 @@
 }
 
 .node {   
-    border:3px solid #1F497D;   
-    background:#0070C0;   
-    border-radius:5px;   
-    color:white;   
-    height:60px!important
+    color:#333333; 
+    height:100px !important;
+    background: #fff;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    position: relative;
+    box-shadow: 0 1px 3px 0 rgb(35 35 35 / 10%), 0 1px 2px -1px rgb(35 35 35 / 10%);
+    transition: .25s;
 }
 
-.node2 {   
-    border:3px solid #333333;   
-    background:#333333;   
-    border-radius:5px;   
-    color:white;   
-    height:60px!important
+.node2 {    
+    color:#333333; 
+    height:85px !important;
+    background: #fff;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    position: relative;
+    box-shadow: 0 1px 3px 0 rgb(35 35 35 / 10%), 0 1px 2px -1px rgb(35 35 35 / 10%);
+    transition: .25s;
 }
 
 .node3 {   
-    border:3px solid #9babaf;   
-    background:#9babaf;   
-    border-radius:5px;   
-    color:white;   
-    height:60px!important
+    color:#333333; 
+    height:75px !important;
+    background: #c3cccf;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    position: relative;
+    box-shadow: 0 1px 3px 0 rgb(35 35 35 / 10%), 0 1px 2px -1px rgb(35 35 35 / 10%);
+    transition: .25s;
 }
 
 .top {
-    border-top:2px solid #1F497D
+    border-top:2px solid #333333
 }
 
 .left {
-    border-left:2px solid #1F497D
+    border-left:2px solid #333333
 }
 
-.collapsed {
-    border-color:#76923C
-}
-
-.node.collapsed {
-    background:#9BBB59
-}
-
-.selected{
-    border-color:#E36C0A
-}
-
-.node.selected {
-    background:#F79646
-}
-
-.hover,.clicked {
-    border-color:#F79646
-}
-
-.node.hover {
-    background:#FABF8F;
-    cursor:pointer
-}
-
-.node.clicked { 
-    background:#F79646
-}
-
-.hidden {
-    visibility:hidden;
-    border-color:white
-}
-
-.dragged {
-    border-color:#8064A2
-}
-
-.node.dragged {
-    background:#B2A1C7;
-    cursor:pointer
+.hover {
+    /*border-color:#333333;*/
 }
