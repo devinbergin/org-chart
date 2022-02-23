@@ -70,6 +70,8 @@ oj.visualization.OrgChart = (function() {
 
     var classes = {
         "node": "node",
+        "node2": "node2",
+        "node3": "node3",
         "childStub": "left",
         "chart": "oj-orgchart",
         "node-select": "selected",
@@ -114,6 +116,7 @@ oj.visualization.OrgChart = (function() {
         }
         this.name = inputObj["name"];
         this.tooltip = inputObj["tooltip"] || "";
+        this.nodeLevel = inputObj["nodeLevel"] || "";
         this.data = inputObj["data"] || undefined;
         this.userData = inputObj["userData"];
         this.nodePosition = inputObj["nodePosition"];
@@ -260,7 +263,8 @@ oj.visualization.OrgChart = (function() {
                     if (i === 0 && !this.isRootNode) {
                         className = positionClasses[this.nodePosition][j];
                     } else if (i == 1 && j == 1) {
-                        className = classes["node"];
+                        // Append nodeLevel to class name to use diff styles for diff levels
+                        className = classes["node"+this.nodeLevel];
                         this.orgChart["options"]["editable"] && (properties["attributes"]["draggable"] = "true");
                         this.tooltip.length > 0 && (properties["attributes"]["title"] = this.tooltip);
                     } else if (i == 2 && j == 1 && !this.isLeafNode) {
@@ -579,7 +583,8 @@ oj.visualization.OrgChart = (function() {
             "nodePosition": nodePos,
             "orgChart": this,
             "nodeIndex": nodeData[4],
-            "userData": nodeData
+            "userData": nodeData,
+            "nodeLevel": nodeData[5]
         });
         var childLevel = level + 1;
         var childNodeObjects = [];

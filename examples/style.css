@@ -17,8 +17,25 @@
     background:#0070C0;   
     border-radius:5px;   
     color:white;   
-    height:60px!important}
-    
+    height:60px!important
+}
+
+.node2 {   
+    border:3px solid #333333;   
+    background:#333333;   
+    border-radius:5px;   
+    color:white;   
+    height:60px!important
+}
+
+.node3 {   
+    border:3px solid #9babaf;   
+    background:#9babaf;   
+    border-radius:5px;   
+    color:white;   
+    height:60px!important
+}
+
 .top {
     border-top:2px solid #1F497D
 }

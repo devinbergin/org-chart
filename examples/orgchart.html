@@ -1,0 +1,81 @@
+<html>
+	<head>
+
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script type="text/javascript" src="../src/OrgChart.js"></script>
+
+		<link href="style.css" rel="stylesheet">
+
+		<script type="text/javascript">
+			var chart;
+			function generateOrgChart() {
+				var chartContainer = document.getElementById("chartContainer");
+				chart = new oj.visualization.OrgChart({
+					"container" : chartContainer,
+					"options" : {
+						"highlightSubtree" : true,
+						"allowCollapse" : true,
+						"selectable" : true,
+						"showHoverColors" : true,
+						"editable" : false
+					}
+				});
+				chart.setData([
+					//Text Displayed || Parent Node (by text displayed) || Title Tag || Data? || Node Index? || NodeLevel (for classes)
+					["Root Node", "Root Node", "This is the root node","","","",1],
+					["Dept 1", "Root Node","","","",2],
+					["Dept 2", "Root Node","","","",2],
+					["Dept 3", "Root Node","","","",2],
+					["Dept 4", "Root Node","","","",2],
+					["Dept 5", "Root Node","","","",2],
+					["Dept 6", "Root Node","","","",2],
+					["Dept 7", "Root Node","","","",2],
+					["Employee 1 D1", "Dept 1","","","",3],
+					["Employee 2 D1", "Employee 1 D1","","","",3],
+					["Employee 3 D1", "Employee 2 D1","","","",3],
+					["Employee 4 D1", "Employee 3 D1","","","",3],
+					["Employee 5 D1", "Employee 4 D1","","","",3],
+					["Employee 1 D2", "Dept 2","","","",3],
+					["Employee 2 D2", "Employee 1 D2","","","",3],
+					["Employee 3 D2", "Employee 2 D2","","","",3],
+					["Employee 4 D2", "Employee 3 D2","","","",3],
+					["Employee 5 D2", "Employee 4 D2","","","",3],
+					["Employee 1 D3", "Dept 3","","","",3]
+				]);
+				chart.draw();
+				chart.setEventListener("node-select", selectHandler);
+				chart.setEventListener("node-collapse", collapseHandler);
+				chart.setEventListener("node-dbclick", dbclickHandler);
+				chart.setEventListener("node-hover", hoverHandler);
+			}
+
+			function selectHandler(eventObject) {
+				console.log("Selected : " + eventObject["nodeObject"].name);
+			}
+
+			function collapseHandler(eventObject) {
+				debugger;
+				console.log("Collpased : " + eventObject["nodeObject"].name + ", isCollapsed : " + eventObject["isCollapsed"]);
+			}			
+
+			function dbclickHandler(eventObject) {
+				debugger;
+				console.log("Double clicked : " + eventObject["nodeObject"].name);
+			}
+
+			function hoverHandler(eventObject) {
+				console.log("Hovered : " + eventObject["nodeObject"].name);
+			}
+
+		</script>
+	</head>
+	<body>
+		<div id="chartContainer"></div>
+	</body>
+
+	<script>
+		$(document).ready(function() {
+			generateOrgChart();
+		});
+	</script>
+</html>
